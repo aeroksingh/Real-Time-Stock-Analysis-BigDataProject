@@ -67,7 +67,7 @@ def create_consumer(retries: int = 10, delay: int = 6) -> KafkaConsumer:
                 ConsumerConfig.KAFKA_TOPIC,
                 bootstrap_servers=ConsumerConfig.KAFKA_BOOTSTRAP_SERVERS,
                 group_id=ConsumerConfig.KAFKA_GROUP_ID,
-                auto_offset_reset="earliest",   # consume from the beginning on first run
+                auto_offset_reset="latest", 
                 enable_auto_commit=True,
                 value_deserializer=lambda b: json.loads(b.decode("utf-8")),
                 consumer_timeout_ms=ConsumerConfig.CONSUMER_POLL_TIMEOUT_MS,

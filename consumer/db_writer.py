@@ -7,6 +7,28 @@ Handles all PostgreSQL interactions:
   - Insert rows into ingestion_logs
   - Load historical close prices for analytics computation
 """
+import math
+
+def _clean_record(record: dict) -> dict:
+    """
+    Convert:
+    - numpy types → native Python types
+    - NaN → None (for PostgreSQL)
+    """
+    cleaned = {}
+
+    for k, v in record.items():
+        # Convert numpy → Python
+        if hasattr(v, "item"):
+            v = v.item()
+
+        # Convert NaN → None
+        if isinstance(v, float) and math.isnan(v):
+            v = None
+
+        cleaned[k] = v
+
+    return cleaned
 
 import logging
 from datetime import datetime, timezone
@@ -60,7 +82,8 @@ def upsert_raw(record: dict) -> bool:
     """)
     try:
         with get_engine().connect() as conn:
-            conn.execute(sql, record)
+            clean = _clean_record(record)   # ✅ ADD THIS
+            conn.execute(sql, clean)        # ✅ USE CLEAN DATA
             conn.commit()
         return True
     except SQLAlchemyError as exc:
@@ -99,7 +122,8 @@ def upsert_processed(record: dict) -> bool:
     """)
     try:
         with get_engine().connect() as conn:
-            conn.execute(sql, record)
+            clean = _clean_record(record)   # ✅ ADD THIS
+            conn.execute(sql, clean)
             conn.commit()
         return True
     except SQLAlchemyError as exc:
@@ -127,12 +151,14 @@ def log_event(
     """)
     try:
         with get_engine().connect() as conn:
-            conn.execute(sql, {
-                "ticker":     ticker,
+            clean = _clean_record({
+                "ticker": ticker,
                 "event_type": event_type,
-                "status":     status,
-                "message":    message,
+                "status": status,
+                "message": message,
+                
             })
+            conn.execute(sql, clean)
             conn.commit()
     except SQLAlchemyError as exc:
         # Don't raise – logging should never break the pipeline
