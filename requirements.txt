@@ -1,0 +1,23 @@
+# ============================================================
+# requirements.txt
+# Python 3.10 / 3.11 compatible
+# ============================================================
+
+# Data ingestion
+yfinance==0.2.40
+pandas==2.3.3
+
+# Kafka
+kafka-python==2.0.2
+
+# PostgreSQL
+psycopg2-binary==2.9.9
+SQLAlchemy==2.0.30
+
+# Dashboard
+streamlit==1.35.0
+plotly==5.22.0
+
+# Utilities
+python-dotenv==1.0.1
+numpy==1.26.4
