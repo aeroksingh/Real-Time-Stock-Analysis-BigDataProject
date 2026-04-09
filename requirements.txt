@@ -1,14 +1,17 @@
 # ============================================================
-# requirements.txt
-# Python 3.10 / 3.11 compatible
+# requirements.txt  –  Python 3.10 / 3.11
 # ============================================================
 
+# Big Data / Spark
+pyspark>=3.5.3            # 3.5.0 crashes on Python 3.12 (worker EOFException); 3.5.3 adds full Py3.12 support
+
 # Data ingestion
-yfinance==0.2.40
-pandas==2.3.3
+yfinance>=0.2.50          # 0.2.40 breaks with Yahoo Finance API changes (YFTzMissingError)
+pandas==2.2.2
+numpy==1.26.4
 
 # Kafka
-kafka-python==2.0.2
+kafka-python-ng>=2.2.3        # kafka-python 2.0.2 breaks on Python 3.12 (missing kafka.vendor.six.moves); kafka-python-ng is the maintained drop-in fork
 
 # PostgreSQL
 psycopg2-binary==2.9.9
@@ -20,4 +23,3 @@ plotly==5.22.0
 
 # Utilities
 python-dotenv==1.0.1
-numpy==1.26.4

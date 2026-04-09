@@ -30,12 +30,14 @@ schema = StructType() \
 # ==============================
 # 3. Read from Kafka
 # ==============================
-df = spark.readStream \
-    .format("kafka") \
-    .option("kafka.bootstrap.servers", "kafka:29092") \
-    .option("subscribe", "stock-topic") \
-    .option("startingOffsets", "latest") \
+df = (
+    spark.readStream
+    .format("kafka")
+    .option("kafka.bootstrap.servers", "kafka:29092")
+    .option("subscribe", "stock_prices")  # comment works fine here
+    .option("startingOffsets", "latest")
     .load()
+)
 
 # ==============================
 # 4. Convert Kafka value to JSON
