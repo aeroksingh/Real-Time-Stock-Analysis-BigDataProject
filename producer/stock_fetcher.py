@@ -21,7 +21,7 @@ def fetch_ticker_data(
     ticker: str,
     days: int = ProducerConfig.HISTORY_DAYS,
 ) -> Optional[list[dict]]:
-    """
+    """c
     Download daily OHLCV bars for *ticker* covering the last *days* calendar days.
 
     Returns
